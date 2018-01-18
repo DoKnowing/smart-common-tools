@@ -1,9 +1,8 @@
 package com.smart.parser.interfaces;
 
 /**
- * @Author: SMA
- * @Date: 2017-09-18 10:36
- * @Explain:
+ * @author: Smart
+ * @date: 2018/1/18 16:06
  */
 public interface SmartLineParser<T> {
     void parser(T line);

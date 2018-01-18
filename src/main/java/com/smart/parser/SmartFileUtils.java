@@ -7,17 +7,16 @@ import com.smart.parser.interfaces.SmartTxtLineParser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Iterator;
 
 /**
- * @Author: SMA
- * @Date: 2017-09-18 10:30
- * @Explain: 实现读取Excel, Csv, txt文件
+ * @author: Smart
+ * @date: 2018/1/18 16:17
  */
 public class SmartFileUtils {
 
@@ -76,7 +75,7 @@ public class SmartFileUtils {
      * @throws IOException
      */
     public static void loadCsvFile(String path, SmartCsvLineParser parser) throws IOException {
-        loadCsvFile(path, SmartFileLoadUtil.FileCode.GBK, parser);
+        loadCsvFile(path, "GBK", parser);
     }
 
     /**
@@ -87,11 +86,11 @@ public class SmartFileUtils {
      * @param parser
      * @throws IOException
      */
-    public static void loadCsvFile(String path, SmartFileLoadUtil.FileCode code, SmartCsvLineParser parser) throws IOException {
+    public static void loadCsvFile(String path, String code, SmartCsvLineParser parser) throws IOException {
         loadCsvFile(path, code, CSVFormat.DEFAULT, false, parser);
     }
 
-    public static void loadCsvFile(String path, SmartFileLoadUtil.FileCode code, CSVFormat format, boolean containHeader, SmartCsvLineParser parser) throws IOException {
+    public static void loadCsvFile(String path, String code, CSVFormat format, boolean containHeader, SmartCsvLineParser parser) throws IOException {
         CSVParser csvParser = SmartFileLoadUtil.loadCSV(path, code, format);
         Iterator<CSVRecord> iterator = csvParser.iterator();
         // 去掉header
@@ -110,12 +109,71 @@ public class SmartFileUtils {
     }
 
     public static void loadTxtFile(String path, String code, SmartTxtLineParser parser) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(SmartFileLoadUtil.getResourceAsInputStream(path), code));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), code));
         String line = "";
         while ((line = reader.readLine()) != null) {
             parser.parser(line);
         }
         reader.close();
         reader = null;
+    }
+
+
+    private static class SmartFileLoadUtil {
+        private static final String XLSX_SUFFIX = ".xlsx";
+        private static final String XLS_SUFFIX = ".xls";
+
+        /**
+         * 加载 excel文件
+         *
+         * @param path
+         * @param sheetNumber
+         * @return
+         * @throws Exception
+         */
+        protected static Sheet loadExcel(String path, int sheetNumber) throws Exception {
+            // estimate file is excel(xlsx.xls) file
+            String fileName = new File(path).getName();
+            if (StringUtils.isEmpty(fileName) || !(fileName.endsWith(XLSX_SUFFIX) | fileName.endsWith(XLS_SUFFIX))) {
+                throw new Exception(path + " is not excel which is must end with \".xlsx\" or \".xls\"");
+            }
+            return WorkbookFactory.create(new File(path)).getSheetAt(sheetNumber);
+        }
+
+        /**
+         * 加载 csv文件
+         *
+         * @param path
+         * @return
+         * @throws IOException
+         */
+        protected static CSVParser loadCSV(String path) throws IOException {
+            return loadCSV(path, "GBK", CSVFormat.DEFAULT);
+        }
+
+        /**
+         * 加载 csv文件
+         *
+         * @param path
+         * @param code
+         * @return
+         * @throws IOException
+         */
+        protected static CSVParser loadCSV(String path, String code) throws IOException {
+            return loadCSV(path, code, CSVFormat.DEFAULT);
+        }
+
+        /**
+         * 加载 csv文件
+         *
+         * @param path
+         * @param code
+         * @param format
+         * @return
+         * @throws IOException
+         */
+        protected static CSVParser loadCSV(String path, String code, CSVFormat format) throws IOException {
+            return new CSVParser(new BufferedReader(new InputStreamReader(new FileInputStream(path), code)), format);
+        }
     }
 }

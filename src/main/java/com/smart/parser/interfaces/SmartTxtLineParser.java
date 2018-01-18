@@ -1,9 +1,8 @@
 package com.smart.parser.interfaces;
 
 /**
- * @Author: SMA
- * @Date: 2017-09-18 10:43
- * @Explain:
+ * @author: Smart
+ * @date: 2018/1/18 16:06
  */
 public abstract class SmartTxtLineParser implements SmartLineParser<String> {
     @Override
