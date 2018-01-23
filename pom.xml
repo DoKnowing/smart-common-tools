@@ -72,21 +72,18 @@
             <version>4.12</version>
         </dependency>
 
+        <!-- fast json -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.35</version>
         </dependency>
 
+        <!-- excel 工具包 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.15</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -94,13 +91,20 @@
             <version>3.15</version>
         </dependency>
 
+        <!-- csv 工具包 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!-- lang 工具包 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.6</version>
         </dependency>
     </dependencies>
-
 
     <profiles>
         <profile>
@@ -143,7 +147,6 @@
             </resource>
         </resources>
 
-
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -178,7 +181,6 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-
             <!-- 资源拷贝插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -268,7 +270,7 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <!-- 打包插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -330,7 +332,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- explicitly define maven-deploy-plugin after other to force exec order -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <executions>
